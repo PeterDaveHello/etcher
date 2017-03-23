@@ -371,6 +371,13 @@ describe('Shared: Errors', function() {
       m.chai.expect(errors.getDescription(error)).to.equal(error.stack);
     });
 
+    it('should return an empty string for a basic error when considerStacktrace is disabled', function() {
+      const error = new Error('Foo');
+      m.chai.expect(errors.getDescription(error, {
+        considerStacktrace: false
+      })).to.equal('');
+    });
+
     it('should prefer a description property to a stack', function() {
       const error = new Error('Foo');
       error.description = 'My description';
@@ -387,6 +394,22 @@ describe('Shared: Errors', function() {
       const error = new Error('Foo');
       error.description = '   ';
       m.chai.expect(errors.getDescription(error)).to.equal(error.stack);
+    });
+
+    it('should return an empty string if the description is a blank string and considerStacktrace is disabled', function() {
+      const error = new Error('Foo');
+      error.description = '   ';
+      m.chai.expect(errors.getDescription(error, {
+        considerStacktrace: false
+      })).to.equal('');
+    });
+
+    it('should return an empty string if the description is an empty string and considerStacktrace is disabled', function() {
+      const error = new Error('Foo');
+      error.description = '';
+      m.chai.expect(errors.getDescription(error, {
+        considerStacktrace: false
+      })).to.equal('');
     });
 
     it('should get a generic description for ENOENT', function() {
